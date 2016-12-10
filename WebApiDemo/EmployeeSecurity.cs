@@ -10,7 +10,7 @@ namespace WebApiDemo
     {
         public static bool Login(string username, string password)
         {
-            using (EmployeeDBEntities entities = new EmployeeDBEntities())
+            using (EmployeeDBEntities1 entities = new EmployeeDBEntities1())
             {
                 return entities.Users.Any(user =>
                        user.Username.Equals(username, StringComparison.OrdinalIgnoreCase)

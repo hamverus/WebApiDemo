@@ -4,7 +4,38 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EmployeeDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="EmployeeDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Animateur">
+          <Key>
+            <PropertyRef Name="cin" />
+          </Key>
+          <Property Name="cin" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="nom" Type="varchar" MaxLength="50" />
+          <Property Name="prenom" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="tel" Type="varchar" MaxLength="50" />
+          <Property Name="etat_civil" Type="varchar" MaxLength="50" />
+          <Property Name="adresse" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Cours">
+          <Key>
+            <PropertyRef Name="nocours" />
+          </Key>
+          <Property Name="nocours" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="libelle" Type="varchar" MaxLength="50" />
+          <Property Name="duree" Type="varchar" MaxLength="50" />
+          <Property Name="type" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Employe">
+          <Key>
+            <PropertyRef Name="matricul" />
+          </Key>
+          <Property Name="matricul" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="nom_soc" Type="varchar" MaxLength="50" />
+          <Property Name="tel_soc" Type="varchar" MaxLength="50" />
+          <Property Name="adresse_soc" Type="varchar" MaxLength="50" />
+          <Property Name="poste" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Employees">
           <Key>
             <PropertyRef Name="ID" />
@@ -15,6 +46,41 @@
           <Property Name="Gender" Type="nvarchar" MaxLength="50" />
           <Property Name="Salary" Type="int" />
         </EntityType>
+        <EntityType Name="Parrticipant">
+          <Key>
+            <PropertyRef Name="cin" />
+          </Key>
+          <Property Name="cin" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="nom" Type="varchar" MaxLength="50" />
+          <Property Name="prenom" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="tel" Type="varchar" MaxLength="50" />
+          <Property Name="etat_civil" Type="varchar" MaxLength="50" />
+          <Property Name="adresse" Type="varchar" MaxLength="100" />
+          <Property Name="employe" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="nosession" />
+          </Key>
+          <Property Name="nosession" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="date_debut" Type="date" />
+          <Property Name="date_fin" Type="date" />
+          <Property Name="prix" Type="varchar" MaxLength="50" />
+          <Property Name="paticipant_id" Type="varchar" MaxLength="50" />
+          <Property Name="animateur_id" Type="varchar" MaxLength="50" />
+          <Property Name="nocours" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
@@ -23,14 +89,119 @@
           <Property Name="Username" Type="nvarchar" MaxLength="100" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <Association Name="FK_Parrticipant_Employe">
+          <End Role="Employe" Type="Self.Employe" Multiplicity="0..1" />
+          <End Role="Parrticipant" Type="Self.Parrticipant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employe">
+              <PropertyRef Name="matricul" />
+            </Principal>
+            <Dependent Role="Parrticipant">
+              <PropertyRef Name="employe" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Session_Animateur">
+          <End Role="Animateur" Type="Self.Animateur" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Animateur">
+              <PropertyRef Name="cin" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="animateur_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Session_Cours">
+          <End Role="Cours" Type="Self.Cours" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="nocours" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="nocours" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Session_Parrticipant">
+          <End Role="Parrticipant" Type="Self.Parrticipant" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parrticipant">
+              <PropertyRef Name="cin" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="paticipant_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EmployeeDBModelStoreContainer">
+          <EntitySet Name="Animateur" EntityType="Self.Animateur" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cours" EntityType="Self.Cours" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employe" EntityType="Self.Employe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Parrticipant" EntityType="Self.Parrticipant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Session" EntityType="Self.Session" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Parrticipant_Employe" Association="Self.FK_Parrticipant_Employe">
+            <End Role="Employe" EntitySet="Employe" />
+            <End Role="Parrticipant" EntitySet="Parrticipant" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Session_Animateur" Association="Self.FK_Session_Animateur">
+            <End Role="Animateur" EntitySet="Animateur" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Session_Cours" Association="Self.FK_Session_Cours">
+            <End Role="Cours" EntitySet="Cours" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Session_Parrticipant" Association="Self.FK_Session_Parrticipant">
+            <End Role="Parrticipant" EntitySet="Parrticipant" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EmployeeDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Animateur">
+          <Key>
+            <PropertyRef Name="cin" />
+          </Key>
+          <Property Name="cin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="etat_civil" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="adresse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Sessions" Relationship="Self.FK_Session_Animateur" FromRole="Animateur" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="Cour">
+          <Key>
+            <PropertyRef Name="nocours" />
+          </Key>
+          <Property Name="nocours" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="libelle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="duree" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Sessions" Relationship="Self.FK_Session_Cours" FromRole="Cours" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="Employe">
+          <Key>
+            <PropertyRef Name="matricul" />
+          </Key>
+          <Property Name="matricul" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nom_soc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tel_soc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="adresse_soc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="poste" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Parrticipants" Relationship="Self.FK_Parrticipant_Employe" FromRole="Employe" ToRole="Parrticipant" />
+        </EntityType>
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="ID" />
@@ -41,10 +212,46 @@
           <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Salary" Type="Int32" />
         </EntityType>
-        <EntityContainer Name="EmployeeDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Employees" EntityType="Self.Employee" />
-          <EntitySet Name="Users" EntityType="EmployeeDBModel.User" />
-        </EntityContainer>
+        <EntityType Name="Parrticipant">
+          <Key>
+            <PropertyRef Name="cin" />
+          </Key>
+          <Property Name="cin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="tel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="etat_civil" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="adresse" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="employe" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Employe1" Relationship="Self.FK_Parrticipant_Employe" FromRole="Parrticipant" ToRole="Employe" />
+          <NavigationProperty Name="Sessions" Relationship="Self.FK_Session_Parrticipant" FromRole="Parrticipant" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="nosession" />
+          </Key>
+          <Property Name="nosession" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="date_debut" Type="DateTime" Precision="0" />
+          <Property Name="date_fin" Type="DateTime" Precision="0" />
+          <Property Name="prix" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="paticipant_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="animateur_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="nocours" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Animateur" Relationship="Self.FK_Session_Animateur" FromRole="Session" ToRole="Animateur" />
+          <NavigationProperty Name="Cour" Relationship="Self.FK_Session_Cours" FromRole="Session" ToRole="Cours" />
+          <NavigationProperty Name="Parrticipant" Relationship="Self.FK_Session_Parrticipant" FromRole="Session" ToRole="Parrticipant" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -53,12 +260,120 @@
           <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <Association Name="FK_Session_Animateur">
+          <End Role="Animateur" Type="Self.Animateur" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Animateur">
+              <PropertyRef Name="cin" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="animateur_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Session_Cours">
+          <End Role="Cours" Type="Self.Cour" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="nocours" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="nocours" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Parrticipant_Employe">
+          <End Role="Employe" Type="Self.Employe" Multiplicity="0..1" />
+          <End Role="Parrticipant" Type="Self.Parrticipant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employe">
+              <PropertyRef Name="matricul" />
+            </Principal>
+            <Dependent Role="Parrticipant">
+              <PropertyRef Name="employe" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Session_Parrticipant">
+          <End Role="Parrticipant" Type="Self.Parrticipant" Multiplicity="0..1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parrticipant">
+              <PropertyRef Name="cin" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="paticipant_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EmployeeDBEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Animateurs" EntityType="Self.Animateur" />
+          <EntitySet Name="Cours" EntityType="Self.Cour" />
+          <EntitySet Name="Employes" EntityType="Self.Employe" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="Parrticipants" EntityType="Self.Parrticipant" />
+          <EntitySet Name="Sessions" EntityType="Self.Session" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Session_Animateur" Association="Self.FK_Session_Animateur">
+            <End Role="Animateur" EntitySet="Animateurs" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Session_Cours" Association="Self.FK_Session_Cours">
+            <End Role="Cours" EntitySet="Cours" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Parrticipant_Employe" Association="Self.FK_Parrticipant_Employe">
+            <End Role="Employe" EntitySet="Employes" />
+            <End Role="Parrticipant" EntitySet="Parrticipants" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Session_Parrticipant" Association="Self.FK_Session_Parrticipant">
+            <End Role="Parrticipant" EntitySet="Parrticipants" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EmployeeDBModelStoreContainer" CdmEntityContainer="EmployeeDBEntities">
+        <EntityContainerMapping StorageEntityContainer="EmployeeDBModelStoreContainer" CdmEntityContainer="EmployeeDBEntities1">
+          <EntitySetMapping Name="Animateurs">
+            <EntityTypeMapping TypeName="EmployeeDBModel.Animateur">
+              <MappingFragment StoreEntitySet="Animateur">
+                <ScalarProperty Name="cin" ColumnName="cin" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="prenom" ColumnName="prenom" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="etat_civil" ColumnName="etat_civil" />
+                <ScalarProperty Name="adresse" ColumnName="adresse" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cours">
+            <EntityTypeMapping TypeName="EmployeeDBModel.Cour">
+              <MappingFragment StoreEntitySet="Cours">
+                <ScalarProperty Name="nocours" ColumnName="nocours" />
+                <ScalarProperty Name="libelle" ColumnName="libelle" />
+                <ScalarProperty Name="duree" ColumnName="duree" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employes">
+            <EntityTypeMapping TypeName="EmployeeDBModel.Employe">
+              <MappingFragment StoreEntitySet="Employe">
+                <ScalarProperty Name="matricul" ColumnName="matricul" />
+                <ScalarProperty Name="nom_soc" ColumnName="nom_soc" />
+                <ScalarProperty Name="tel_soc" ColumnName="tel_soc" />
+                <ScalarProperty Name="adresse_soc" ColumnName="adresse_soc" />
+                <ScalarProperty Name="poste" ColumnName="poste" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="EmployeeDBModel.Employee">
               <MappingFragment StoreEntitySet="Employees">
@@ -70,12 +385,50 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Parrticipants">
+            <EntityTypeMapping TypeName="EmployeeDBModel.Parrticipant">
+              <MappingFragment StoreEntitySet="Parrticipant">
+                <ScalarProperty Name="cin" ColumnName="cin" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="prenom" ColumnName="prenom" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="etat_civil" ColumnName="etat_civil" />
+                <ScalarProperty Name="adresse" ColumnName="adresse" />
+                <ScalarProperty Name="employe" ColumnName="employe" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sessions">
+            <EntityTypeMapping TypeName="EmployeeDBModel.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="nosession" ColumnName="nosession" />
+                <ScalarProperty Name="date_debut" ColumnName="date_debut" />
+                <ScalarProperty Name="date_fin" ColumnName="date_fin" />
+                <ScalarProperty Name="prix" ColumnName="prix" />
+                <ScalarProperty Name="paticipant_id" ColumnName="paticipant_id" />
+                <ScalarProperty Name="animateur_id" ColumnName="animateur_id" />
+                <ScalarProperty Name="nocours" ColumnName="nocours" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="EmployeeDBModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="EmployeeDBModel.User">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

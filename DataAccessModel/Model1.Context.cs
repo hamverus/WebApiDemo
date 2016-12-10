@@ -13,10 +13,10 @@ namespace DataAccessModel
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EmployeeDBEntities : DbContext
+    public partial class EmployeeDBEntities1 : DbContext
     {
-        public EmployeeDBEntities()
-            : base("name=EmployeeDBEntities")
+        public EmployeeDBEntities1()
+            : base("name=EmployeeDBEntities1")
         {
         }
     
@@ -25,7 +25,13 @@ namespace DataAccessModel
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Animateur> Animateurs { get; set; }
+        public virtual DbSet<Cour> Cours { get; set; }
+        public virtual DbSet<Employe> Employes { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Parrticipant> Parrticipants { get; set; }
+        public virtual DbSet<Session> Sessions { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }
 }

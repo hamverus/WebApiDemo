@@ -9,37 +9,38 @@ using System.Web.Http;
 
 namespace WebApiDemo.Controllers
 {
-   // [Authorize]
-    public class ValuesController : ApiController
+    public class SessionController : ApiController
     {
+        EmployeeDBEntities1 entities = new EmployeeDBEntities1();
+        
         // GET api/values
         [BasicAuthentication]
         public HttpResponseMessage Get(string gender = "All")
         {
             string username = Thread.CurrentPrincipal.Identity.Name;
 
-            using (EmployeeDBEntities1 entities = new EmployeeDBEntities1()) 
-            {
-                switch (username.ToLower())
-                {
-                    case "male":
-                        return Request.CreateResponse(HttpStatusCode.OK,
-                            entities.Employees.Where(e => e.Gender.ToLower() == "male").ToList());
-                    case "female":
-                        return Request.CreateResponse(HttpStatusCode.OK,
-                            entities.Employees.Where(e => e.Gender.ToLower() == "female").ToList());
-                    default:
-                        return Request.CreateResponse(HttpStatusCode.BadRequest);
-                }
-            }
+
+            //switch (username.ToLower())
+            //{
+            //    case "male":
+            //        return Request.CreateResponse(HttpStatusCode.OK,
+            //            entities.Sessions.Where(e => e.Gender.ToLower() == "male").ToList());
+            //    case "female":
+            //        return Request.CreateResponse(HttpStatusCode.OK,
+            //            entities.Sessions.Where(e => e.Gender.ToLower() == "female").ToList());
+            //    default:
+            //        return Request.CreateResponse(HttpStatusCode.BadRequest);
+            //}
+            return Request.CreateResponse(HttpStatusCode.OK,
+                  entities.Sessions.ToString());
+
         }
 
         // GET api/values/5
         public HttpResponseMessage Get(int id)
         {
-            using (EmployeeDBEntities1 entities = new EmployeeDBEntities1())
-            {
-                var entity = entities.Employees.FirstOrDefault(e => e.ID == id);
+            
+                var entity = entities.Sessions.FirstOrDefault(e => e.nosession.Equals(id.ToString()));
                 if (entity != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, entity);
@@ -47,27 +48,26 @@ namespace WebApiDemo.Controllers
                 else
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NotFound,
-                        "Employee with Id " + id.ToString() + " not found");
+                        "Sessions with Id " + id.ToString() + " not found");
                 }
-            }
+            
         }
 
         // POST api/values
-        public HttpResponseMessage Post([FromBody] Employee employee)
+        public HttpResponseMessage Post([FromBody] Session session)
         {
             try
             {
-                using (EmployeeDBEntities1 entities = new EmployeeDBEntities1())
-                {
-                    entities.Employees.Add(employee);
+                
+                    entities.Sessions.Add(session);
                     entities.SaveChanges();
 
-                    var message = Request.CreateResponse(HttpStatusCode.Created, employee);
+                    var message = Request.CreateResponse(HttpStatusCode.Created, session);
                     message.Headers.Location = new Uri(Request.RequestUri +
-                        employee.ID.ToString());
+                        session.nosession.ToString());
 
                     return message;
-                }
+                
             }
             catch (Exception ex)
             {
@@ -85,21 +85,20 @@ namespace WebApiDemo.Controllers
         {
             try
             {
-                using (EmployeeDBEntities1 entities = new EmployeeDBEntities1())
-                {
-                    var entity = entities.Employees.FirstOrDefault(e => e.ID == id);
+                
+                    var entity = entities.Sessions.FirstOrDefault(e => e.nosession.Equals(id.ToString()));
                     if (entity == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NotFound,
-                            "Employee with Id = " + id.ToString() + " not found to delete");
+                            "Sessions with Id = " + id.ToString() + " not found to delete");
                     }
                     else
                     {
-                        entities.Employees.Remove(entity);
+                        entities.Sessions.Remove(entity);
                         entities.SaveChanges();
                         return Request.CreateResponse(HttpStatusCode.OK);
                     }
-                }
+                
             }
             catch (Exception ex)
             {

@@ -4,9 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="591e1798cf0f440887ed8c5f855be08e" Name="Diagram1">
-        <EntityTypeShape EntityType="EmployeeDBModel.Employee" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EmployeeDBModel.User" Width="1.5" PointX="3.375" PointY="0.75" />
+      <Diagram DiagramId="2df3ba9d7488472cacfdfa523f510d09" Name="Diagram1">
+        <EntityTypeShape EntityType="EmployeeDBModel.Animateur" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.Cour" Width="1.5" PointX="3" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.Employe" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.Employee" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.Parrticipant" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.Session" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDBModel.User" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="EmployeeDBModel.FK_Session_Animateur" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeDBModel.FK_Session_Cours" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeDBModel.FK_Parrticipant_Employe" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeDBModel.FK_Session_Parrticipant" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
